@@ -1,0 +1,18 @@
+{
+  "auc_roc": 0.9180431761178257,
+  "auc_pr": 0.928563764350304,
+  "accuracy": 0.826551926853369,
+  "precision": 0.8607365439093484,
+  "recall": 0.7724418456845049,
+  "f1": 0.8142024519327393,
+  "n_test_samples": 79949,
+  "n_estimators_used": 2397,
+  "optuna_best_cv_auc": 0.9183073654402669,
+  "n_trials_completed": 100,
+  "confusion_matrix": {
+    "TN": 35698,
+    "FP": 4916,
+    "FN": 8951,
+    "TP": 30384
+  }
+}

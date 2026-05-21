@@ -53,3 +53,5 @@ env/
 *.joblib
 *.h5
 *.pth
+
+CLAUDE.md
