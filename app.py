@@ -1,11 +1,18 @@
+import logging
+import os
 from contextlib import asynccontextmanager
 
 import xgboost as xgb
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from src.features import PromptInjectionFeatureEngineer
 from src.model import predict
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+MODEL_PATH = os.environ.get("MODEL_PATH", "models/xgboost_model.json")
 
 
 class PredictRequest(BaseModel):
@@ -23,12 +30,22 @@ class HealthResponse(BaseModel):
     model_loaded: bool
 
 
+booster: xgb.Booster | None = None
+feature_engineer: PromptInjectionFeatureEngineer | None = None
+
+
 @asynccontextmanager
 async def lifespan(app):
     global booster, feature_engineer
-    booster = xgb.Booster()
-    booster.load_model("models/xgboost_model.json")
-    feature_engineer = PromptInjectionFeatureEngineer()
+    try:
+        booster = xgb.Booster()
+        booster.load_model(MODEL_PATH)
+        feature_engineer = PromptInjectionFeatureEngineer()
+        logger.info(f"Model loaded from {MODEL_PATH}")
+    except Exception as e:
+        logger.error(f"Failed to load model: {e}")
+        booster = None
+        feature_engineer = None
     yield
 
 
@@ -41,10 +58,20 @@ app = FastAPI(
 
 @app.post("/predict", response_model=PredictResponse)
 def predict_endpoint(request: PredictRequest):
-    result = predict(request.text, booster, feature_engineer)
-    return PredictResponse(**result)
+    if booster is None or feature_engineer is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+    try:
+        result = predict(request.text, booster, feature_engineer)
+        return PredictResponse(**result)
+    except Exception as e:
+        logger.error(f"Prediction failed: {e}")
+        raise HTTPException(status_code=500, detail="Prediction failed")
 
 
 @app.get("/health", response_model=HealthResponse)
 def health():
-    return HealthResponse(status="ok", model_loaded=booster is not None)
+    loaded = booster is not None and feature_engineer is not None
+    return HealthResponse(
+        status="ok" if loaded else "degraded",
+        model_loaded=loaded,
+    )
