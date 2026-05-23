@@ -221,10 +221,8 @@ class PromptInjectionFeatureEngineer:
         features.update(extract_linguisticas(text))
         features.update(extract_padroes_ataque(text))
         features.update(extract_estruturais(text))
-        if features.get("lexical_diversity") is None or (
-            isinstance(features.get("lexical_diversity"), float)
-            and np.isnan(features.get("lexical_diversity"))
-        ):
+        ld = features.get("lexical_diversity")
+        if ld is None or (isinstance(ld, float) and (np.isnan(ld) or np.isinf(ld))):
             features["lexical_diversity"] = MEDIAN_LEXICAL_DIVERSITY
         features["comma_to_period_ratio"] = min(
             features["comma_to_period_ratio"], CLIP_COMMA_TO_PERIOD_RATIO
