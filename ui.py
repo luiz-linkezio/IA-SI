@@ -1,10 +1,16 @@
+import sys
+
 import gradio as gr
 
 from src.features import PromptInjectionFeatureEngineer
 from src.model import load_model, predict
 
-booster = load_model()
-feature_engineer = PromptInjectionFeatureEngineer()
+try:
+    booster = load_model()
+    feature_engineer = PromptInjectionFeatureEngineer()
+except Exception as e:
+    print(f"Error loading model: {e}", file=sys.stderr)
+    sys.exit(1)
 
 
 def classify_prompt(text):
@@ -41,3 +47,4 @@ demo = gr.Interface(
 
 if __name__ == "__main__":
     demo.launch(server_port=7860, theme=gr.themes.Soft())
+
