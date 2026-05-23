@@ -9,7 +9,7 @@ feature_engineer = PromptInjectionFeatureEngineer()
 
 def classify_prompt(text):
     result = predict(text, booster, feature_engineer)
-    label_name = "Injection" if result["is_injection"] else "Benign"
+    label_name = "Injection" if result["is_injection"] else "Benigno"
     confidence = result["probability"] if result["is_injection"] else 1 - result["probability"]
     return label_name, round(confidence, 4)
 
