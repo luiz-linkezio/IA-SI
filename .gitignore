@@ -55,3 +55,5 @@ env/
 *.pth
 
 CLAUDE.md
+
+/.opencode
