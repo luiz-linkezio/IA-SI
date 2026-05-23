@@ -1,6 +1,6 @@
 import xgboost as xgb
 
-from src.features import FEATURE_NAMES, PromptInjectionFeatureEngineer
+from src.features import PromptInjectionFeatureEngineer
 
 
 def load_model(path="models/xgboost_model.json"):
@@ -17,7 +17,7 @@ def predict(text, booster, feature_engineer=None):
     dm = xgb.DMatrix(df)
     iteration_range = (0, booster.best_iteration + 1)
     proba = float(booster.predict(dm, iteration_range=iteration_range)[0])
-    label = int(proba >= 0.5)
+    label = int(proba > 0.5)
     return {
         "label": label,
         "probability": round(proba, 4),
