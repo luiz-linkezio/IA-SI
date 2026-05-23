@@ -153,7 +153,7 @@ def extract_linguisticas(text):
             "entropy": 0,
         }
     ttr = unique_words / word_count
-    lex_div = np.log(word_count) / np.log(unique_words) if unique_words > 0 else 0
+    lex_div = np.log(word_count) / np.log(unique_words) if unique_words > 1 else float(word_count)
     word_freqs = Counter(words)
     avg_freq = sum(word_freqs.values()) / len(word_freqs) if word_freqs else 0
     word_lengths = [len(w) for w in words]
