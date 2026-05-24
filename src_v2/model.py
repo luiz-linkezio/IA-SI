@@ -1,12 +1,8 @@
-import logging
-
 import pandas as pd
 import xgboost as xgb
 
 from src_v2.embeddings import EmbeddingGenerator, EMBEDDING_DIM
 from src_v2.features import FEATURE_NAMES_V2, PromptInjectionFeatureEngineerV2
-
-logger = logging.getLogger(__name__)
 
 
 def load_model(path: str = "models/xgboost_model_v2.json") -> xgb.Booster:
@@ -42,7 +38,8 @@ def predict(
 
     dm = xgb.DMatrix(df)
     best_iter = getattr(booster, "best_iteration", 0)
-    proba = float(booster.predict(dm, iteration_range=(0, best_iter + 1))[0])
+    iteration_range = (0, best_iter + 1)
+    proba = float(booster.predict(dm, iteration_range=iteration_range)[0])
     label = int(proba > 0.5)
     return {
         "label": label,
