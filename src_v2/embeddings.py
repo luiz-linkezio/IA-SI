@@ -11,7 +11,10 @@ EMBEDDING_DIM = 384
 class EmbeddingGenerator:
     def __init__(self, model_name: str = MODEL_NAME):
         logger.info(f"Loading embedding model: {model_name}")
-        self.model = SentenceTransformer(model_name)
+        try:
+            self.model = SentenceTransformer(model_name)
+        except Exception as e:
+            raise RuntimeError(f"Failed to load embedding model '{model_name}': {e}") from e
         logger.info(f"Embedding model loaded (dim={EMBEDDING_DIM})")
 
     def encode(self, text: str) -> list[float]:
