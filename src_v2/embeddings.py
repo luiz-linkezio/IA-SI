@@ -27,6 +27,7 @@ class EmbeddingGenerator:
         show_progress_bar: bool = True,
         device: str | None = None,
     ) -> list[list[float]]:
+        texts = [t if isinstance(t, str) and t.lower() != "nan" else "" for t in texts]
         kwargs = {
             "batch_size": batch_size,
             "show_progress_bar": show_progress_bar,
