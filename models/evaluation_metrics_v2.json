@@ -1,0 +1,16 @@
+{
+  "auc_roc": 0.9922244299963778,
+  "auc_pr": 0.99258389395912,
+  "accuracy": 0.9556092008655518,
+  "precision": 0.9618025086460538,
+  "recall": 0.9474005338756832,
+  "f1": 0.9545472009835939,
+  "fn_rate": 0.05259946612431677,
+  "fp_rate": 0.036440636233811004,
+  "n_features": 403,
+  "n_handcrafted": 19,
+  "n_embeddings": 384,
+  "best_iteration": 2818,
+  "v1_baseline_auc": 0.918,
+  "v1_baseline_fn_rate": 0.228
+}
